@@ -1,0 +1,17 @@
+{
+  "name": "PhishGuard AI",
+  "short_name": "PhishGuard",
+  "description": "Email Security Scanner - Protect yourself from phishing",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a1a",
+  "theme_color": "#1a1a2e",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }
+  ]
+}

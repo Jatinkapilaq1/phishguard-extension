@@ -1,0 +1,20 @@
+{
+  "name": "phishguard-ai",
+  "version": "1.0.0",
+  "description": "AI-powered real-time phishing detection browser extension",
+  "main": "background.js",
+  "scripts": {
+    "start": "echo 'Load this extension in Chrome developer mode'",
+    "build": "echo 'No build required - load directly'"
+  },
+  "keywords": [
+    "phishing",
+    "security",
+    "browser-extension",
+    "cybersecurity",
+    "ai",
+    "machine-learning"
+  ],
+  "author": "",
+  "license": "MIT"
+}

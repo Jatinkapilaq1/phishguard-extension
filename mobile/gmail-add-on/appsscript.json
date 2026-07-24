@@ -1,0 +1,16 @@
+{
+  "timeZone": "Asia/Kolkata",
+  "dependencies": {},
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8",
+  "gmail": {
+    "name": "PhishGuard AI",
+    "logoUrl": "https://raw.githubusercontent.com/nicehash/PhishGuard/main/icons/icon128.png",
+    "contextualTriggers": [
+      {
+        "unconditional": {},
+        "onTriggerFunction": "onGmailMessage"
+      }
+    ]
+  }
+}

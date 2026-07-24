@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhishGuard AI</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { width: 380px; min-height: 400px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; }
+    .header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .logo { font-size: 32px; margin-bottom: 10px; }
+    .header h1 { font-size: 20px; font-weight: 600; margin-bottom: 5px; }
+    .header .ver { font-size: 10px; color: #4caf50; background: rgba(76,175,80,0.15); padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 4px; }
+    .header p { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+    .status-card { margin: 15px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
+    .status-indicator { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+    .status-dot { width: 12px; height: 12px; border-radius: 50%; background: #4caf50; animation: pulse 2s infinite; }
+    .status-dot.warning { background: #ff9800; }
+    .status-dot.danger { background: #f44336; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .status-text { font-size: 14px; font-weight: 500; }
+    .url-display { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; font-size: 11px; word-break: break-all; margin-bottom: 15px; max-height: 50px; overflow-y: auto; color: rgba(255,255,255,0.5); }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .stat-item { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; text-align: center; }
+    .stat-value { font-size: 24px; font-weight: bold; color: #4caf50; }
+    .stat-label { font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 5px; }
+    .actions { padding: 15px; }
+    .btn { width: 100%; padding: 13px; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 8px; transition: all 0.2s; }
+    .btn-primary { background: linear-gradient(135deg, #4caf50, #45a049); color: white; }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(76,175,80,0.4); }
+    .btn-secondary { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.15); }
+    .btn-secondary:hover { background: rgba(255,255,255,0.15); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .threats-section { padding: 0 15px 15px; }
+    .threats-title { font-size: 13px; font-weight: 600; margin-bottom: 10px; color: rgba(255,255,255,0.8); }
+    .threat-item { display: flex; align-items: center; gap: 10px; padding: 10px; background: rgba(244,67,54,0.1); border-radius: 8px; margin-bottom: 6px; border-left: 3px solid #f44336; font-size: 12px; }
+    .threat-icon { font-size: 16px; flex-shrink: 0; }
+    .threat-text { flex: 1; line-height: 1.4; }
+    .safe-item { background: rgba(76,175,80,0.1); border-left-color: #4caf50; }
+    .warn-item { background: rgba(255,152,0,0.1); border-left-color: #ff9800; }
+    .loading { display: none; text-align: center; padding: 20px; }
+    .spinner { width: 36px; height: 36px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #4caf50; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 12px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .footer { padding: 12px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); font-size: 10px; color: rgba(255,255,255,0.3); }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">\u{1F6E1}\uFE0F</div>
+    <h1>PhishGuard AI</h1>
+    <div class="ver">v4.0</div>
+    <p>Smart Email Security Scanner</p>
+  </div>
+
+  <div class="status-card">
+    <div class="status-indicator">
+      <div class="status-dot" id="statusDot"></div>
+      <span class="status-text" id="statusText">Ready to scan</span>
+    </div>
+    <div class="url-display" id="currentUrl">Loading...</div>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-value" id="scannedCount">0</div>
+        <div class="stat-label">Scanned Today</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="blockedCount">0</div>
+        <div class="stat-label">Threats Blocked</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading" id="loadingState">
+    <div class="spinner"></div>
+    <p style="font-size:12px;color:rgba(255,255,255,0.6)">Analyzing page for threats...</p>
+  </div>
+
+  <div id="resultsSection">
+    <div class="threats-section">
+      <div class="threats-title">Current Page Analysis</div>
+      <div id="threatsList"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="scanBtn">\u{1F50D} Scan Current Page</button>
+      <button class="btn btn-secondary" id="gmailBtn">\u{1F4E7} Scan Gmail</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    PhishGuard AI v4.0 \u00B7 Protection Active
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

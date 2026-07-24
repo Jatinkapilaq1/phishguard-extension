@@ -1,0 +1,44 @@
+🛡️ PHISHGUARD AI - INSTALLATION GUIDE
+=====================================
+
+QUICK START (3 Steps):
+----------------------
+
+Step 1: GENERATE ICONS
+   - Open "generate-icons.html" in Chrome
+   - Click "Generate Icons" button
+   - Right-click each icon → Save as:
+     * icon16.png
+     * icon48.png  
+     * icon128.png
+   - Save all three to the "icons" folder
+
+Step 2: LOAD EXTENSION
+   - Open Chrome
+   - Type: chrome://extensions/
+   - Turn ON "Developer mode" (top-right)
+   - Click "Load unpacked"
+   - Select the "phishguard-extension" folder
+   - Done! Extension is now active
+
+Step 3: TEST IT
+   - Open "test-page.html" in Chrome
+   - Click the PhishGuard icon in toolbar
+   - See the scan results
+
+NEED HELP?
+----------
+- Read DEPLOYMENT.md for detailed instructions
+- Read README.md for feature details
+
+FILES INCLUDED:
+--------------
+✅ manifest.json      - Extension config
+✅ background.js      - URL scanner
+✅ content.js         - Page analyzer
+✅ popup.html/js      - User interface
+✅ test-page.html     - Test scenarios
+✅ DEPLOYMENT.md      - Full guide
+✅ START-HERE.bat     - Opens all files
+
+ENJOY YOUR PHISHING PROTECTION!
