@@ -113,11 +113,13 @@ phishguard-extension/
 ## 🚀 Quick Start
 
 ### Chrome Extension
-1. Download this repository
-2. Open `chrome://extensions` in Chrome/Brave
-3. Enable **Developer Mode**
-4. Click **Load Unpacked** → select the root folder
-5. Open Gmail → PhishGuard button appears
+1. Go to [github.com/Jatinkapilaq1/phishguard-extension](https://github.com/Jatinkapilaq1/phishguard-extension)
+2. Click the green **Code** button → **Download ZIP**
+3. Extract the ZIP file
+4. Open `chrome://extensions` in Chrome/Brave
+5. Enable **Developer Mode** (top right toggle)
+6. Click **Load Unpacked** → select the extracted folder
+7. Open Gmail → PhishGuard button appears
 
 ### Gmail Add-on (Android/iOS)
 1. Go to [script.google.com](https://script.google.com)
