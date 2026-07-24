@@ -30,6 +30,20 @@ PhishGuard AI is a **real-time email phishing detection system** that works as a
 
 </div>
 
+### 📸 Screenshots
+
+#### Extension Panel — After Scanning
+![Extension Panel](screenshots/extension-panel.png)
+
+#### Click-to-Highlight — Multiple Risk Areas
+![Click to Highlight](screenshots/highlight-demo.png)
+
+#### Telegram Bot — Forward & Scan
+![Telegram Bot](screenshots/telegram-bot.png)
+
+#### Gmail Add-on — Android/iOS
+![Gmail Add-on](screenshots/gmail-addon.png)
+
 ---
 
 ## 🎯 Key Features

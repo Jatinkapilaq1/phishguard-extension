@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PhishGuard AI — Screenshots</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a1a;color:#fff;padding:20px}
+h1{text-align:center;font-size:28px;margin:20px 0}
+.sub{text-align:center;color:rgba(255,255,255,.4);margin-bottom:40px}
+.section{margin-bottom:60px}
+.section h2{font-size:20px;margin-bottom:20px;color:#4caf50}
+
+/* Screenshot 1: Extension Panel */
+.mock-panel{width:380px;margin:0 auto;background:#1a1a2e;border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.panel-header{background:linear-gradient(135deg,#1a1a2e,#16213e);padding:14px;display:flex;justify-content:space-between;align-items:center}
+.panel-header .title{font-size:14px;font-weight:700}
+.panel-header .ver{font-size:9px;color:#4caf50;background:rgba(76,175,80,.2);padding:2px 6px;border-radius:4px}
+.panel-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:10px 14px;background:rgba(0,0,0,.3)}
+.stat-box{text-align:center;padding:8px;border-radius:6px}
+.stat-box.safe{background:rgba(76,175,80,.1)}
+.stat-box.low{background:rgba(255,193,7,.1)}
+.stat-box.warn{background:rgba(255,152,0,.1)}
+.stat-box.danger{background:rgba(244,67,54,.1)}
+.stat-box .num{font-size:22px;font-weight:700}
+.stat-box.safe .num{color:#4caf50}
+.stat-box.low .num{color:#ffc107}
+.stat-box.warn .num{color:#ff9800}
+.stat-box.danger .num{color:#f44336}
+.stat-box small{font-size:8px;color:rgba(255,255,255,.4)}
+.panel-results{padding:10px 14px;max-height:400px;overflow-y:auto}
+
+/* Email Cards */
+.email-card{background:rgba(255,255,255,.04);border-radius:0 8px 8px 0;padding:10px 12px;margin-bottom:8px;border-left:3px solid}
+.email-card.safe{border-color:#4caf50}
+.email-card.warning{border-color:#ff9800}
+.email-card.danger{border-color:#f44336}
+.email-card .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.email-card .sender{font-size:11px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.email-card .score{font-size:14px;font-weight:700;min-width:28px;text-align:right}
+.email-card.safe .score{color:#4caf50}
+.email-card.warning .score{color:#ff9800}
+.email-card.danger .score{color:#f44336}
+.email-card .subject{font-size:10px;color:rgba(255,255,255,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.finding{background:rgba(0,0,0,.25);border-radius:4px;padding:6px 8px;margin-top:6px;border-left:2px solid;font-size:10px}
+.finding.danger{border-color:#f44336}
+.finding.high{border-color:#ff9800}
+.finding.safe{border-color:#4caf50}
+.finding .ft{font-weight:600;display:flex;align-items:center;gap:4px}
+.finding .fd{color:rgba(255,255,255,.5);margin-top:2px;line-height:1.3}
+.hl-link{font-size:9px;color:#64b5f6;margin-top:3px;cursor:pointer}
+.panel-btn{width:100%;padding:11px;background:linear-gradient(135deg,#4caf50,#2e7d32);color:#fff;border:none;font-weight:600;font-size:12px;border-radius:0 0 16px 16px;cursor:pointer}
+
+/* Screenshot 2: Highlighted Email */
+.highlight-demo{max-width:600px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.hl-header{background:#f5f5f5;padding:16px;border-bottom:1px solid #e0e0e0}
+.hl-header .hl-sender{color:#333;font-weight:700;font-size:14px}
+.hl-header .hl-email{color:#666;font-size:12px}
+.hl-header .hl-subject{color:#333;font-size:16px;font-weight:600;margin-top:8px}
+.hl-body{padding:20px;color:#333;font-size:13px;line-height:1.8}
+.hl-body .hl-risk{outline:3px solid #f44336;outline-offset:3px;box-shadow:0 0 15px rgba(244,67,54,0.5);background:rgba(244,67,54,0.08);border-radius:3px;padding:2px 4px}
+.hl-body .hl-orange{outline:3px solid #ff9800;outline-offset:3px;box-shadow:0 0 15px rgba(255,152,0,0.5);background:rgba(255,152,0,0.08);border-radius:3px;padding:2px 4px}
+.hl-body .hl-yellow{outline:3px solid #ffc107;outline-offset:3px;box-shadow:0 0 15px rgba(255,193,7,0.5);background:rgba(255,193,7,0.08);border-radius:3px;padding:2px 4px}
+.hl-badge{display:inline-block;background:#f44336;color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;margin-left:6px}
+
+/* Screenshot 3: Telegram Bot */
+.mock-telegram{max-width:380px;margin:0 auto;background:#0e1621;border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.tg-header{background:#17212b;padding:12px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #101921}
+.tg-avatar{width:40px;height:40px;background:linear-gradient(135deg,#4caf50,#2e7d32);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
+.tg-name{font-size:14px;font-weight:600}
+.tg-status{font-size:11px;color:#4caf50}
+.tg-messages{padding:16px;min-height:400px}
+.tg-msg{max-width:85%;padding:8px 12px;border-radius:12px;margin-bottom:8px;font-size:13px;line-height:1.5}
+.tg-user{background:#2b5278;color:#fff;margin-left:auto;border-bottom-right-radius:4px}
+.tg-bot{background:#182533;color:#fff;border-bottom-left-radius:4px}
+.tg-bot b{color:#4caf50}
+.tg-input{background:#17212b;padding:12px 16px;display:flex;align-items:center;gap:8px;border-top:1px solid #101921}
+.tg-input span{flex:1;color:rgba(255,255,255,.3);font-size:13px}
+
+/* Screenshot 4: Gmail Add-on */
+.mock-gmail{max-width:420px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.gmail-email{padding:16px;border-bottom:1px solid #e8eaed}
+.gmail-email .ge-from{color:#333;font-weight:600;font-size:13px}
+.gmail-email .ge-subject{color:#333;font-size:11px;margin-top:4px}
+.gmail-email .ge-body{color:#666;font-size:12px;margin-top:8px;line-height:1.5}
+.gmail-addon{background:#f8f9fa;border-left:3px solid #4caf50;padding:12px;margin-top:12px;border-radius:0 8px 8px 0}
+.gmail-addon .ga-title{font-size:12px;font-weight:700;color:#333}
+.gmail-addon .ga-score{font-size:20px;font-weight:800;color:#4caf50}
+.gmail-addon .ga-finding{background:#fff;padding:6px 8px;border-radius:4px;margin-top:6px;border-left:2px solid;font-size:11px}
+.gmail-addon .ga-finding.safe{border-color:#4caf50;color:#333}
+</style>
+</head>
+<body>
+
+<h1>PhishGuard AI — Visual Demo</h1>
+<p class="sub">Open this page, take screenshots of each section, add them to your GitHub README</p>
+
+<!-- SCREENSHOT 1: Extension Panel -->
+<div class="section">
+<h2>Screenshot 1 — Extension Panel (after scanning)</h2>
+<div class="mock-panel">
+  <div class="panel-header">
+    <div class="title">🛡️ PhishGuard AI <span class="ver">v4.0</span></div>
+    <div style="font-size:10px;color:rgba(255,255,255,.3)">✕</div>
+  </div>
+  <div class="panel-stats">
+    <div class="stat-box safe"><div class="num">12</div><small>SAFE</small></div>
+    <div class="stat-box low"><div class="num">3</div><small>LOW</small></div>
+    <div class="stat-box warn"><div class="num">1</div><small>MEDIUM</small></div>
+    <div class="stat-box danger"><div class="num">2</div><small>DANGER</small></div>
+  </div>
+  <div class="panel-results">
+    <!-- DANGER Card -->
+    <div class="email-card danger">
+      <div class="top">
+        <div class="sender">PayPal Security Team</div>
+        <div class="score">25</div>
+      </div>
+      <div class="subject">URGENT: Your account will be suspended</div>
+      <div class="finding danger">
+        <div class="ft">🎭 Pretends to be PayPal</div>
+        <div class="fd">Says "PayPal" but from scam-alert.xyz. Real PayPal emails only come from paypal.com.</div>
+      </div>
+      <div class="finding danger">
+        <div class="ft">⏰ Pressure to act fast</div>
+        <div class="fd">Uses "URGENT" to make you rush.</div>
+      </div>
+      <div class="finding high">
+        <div class="ft">🔓 Insecure link found</div>
+        <div class="fd">Has http:// link — data can be stolen.</div>
+      </div>
+      <div class="hl-link">👆 Click to see risky parts highlighted</div>
+    </div>
+
+    <!-- WARNING Card -->
+    <div class="email-card warning">
+      <div class="top">
+        <div class="sender">Amazon Order Update</div>
+        <div class="score">55</div>
+      </div>
+      <div class="subject">Your order #OD-48291 has been shipped</div>
+      <div class="finding high">
+        <div class="ft">⏰ Pressure to act fast</div>
+        <div class="fd">Uses "within 24 hours" to make you rush.</div>
+      </div>
+      <div class="hl-link">👆 Click to see risky parts highlighted</div>
+    </div>
+
+    <!-- SAFE Card -->
+    <div class="email-card safe">
+      <div class="top">
+        <div class="sender">HDFC Bank</div>
+        <div class="score">100</div>
+      </div>
+      <div class="subject">Your account statement is ready</div>
+      <div class="finding safe">
+        <div class="ft">🏦 Bank Statement</div>
+        <div class="fd">Recognized bank statement from verified sender.</div>
+      </div>
+    </div>
+  </div>
+  <button class="panel-btn">🔍 Scan Emails</button>
+</div>
+</div>
+
+<!-- SCREENSHOT 2: Highlighted Email -->
+<div class="section">
+<h2>Screenshot 2 — Click-to-Highlight (multiple areas)</h2>
+<div class="highlight-demo">
+  <div class="hl-header">
+    <div class="hl-sender">PayPal Security Team <span class="hl-badge">DANGER</span></div>
+    <div class="hl-email">security@scam-alert.xyz</div>
+    <div class="hl-subject">URGENT: Your account will be suspended</div>
+  </div>
+  <div class="hl-body">
+    <p>Dear Customer,</p><br>
+    <p>Your account has been <span class="hl-risk">suspended due to unusual activity</span>. You must <span class="hl-risk">verify your identity</span> within 24 hours or your account will be <span class="hl-orange">permanently closed</span>.</p><br>
+    <p>Click here to <span class="hl-risk">verify your account</span>: <span class="hl-orange">http://scam-alert.xyz/paypal-verify</span></p><br>
+    <p>If you did not make this change, <span class="hl-yellow">contact us immediately</span>.</p><br>
+    <p style="color:#999;font-size:11px">— PayPal Security Team</p>
+  </div>
+</div>
+<p style="text-align:center;color:rgba(255,255,255,.3);font-size:11px;margin-top:10px">Red = DANGER &nbsp; Orange = HIGH &nbsp; Yellow = MEDIUM — each color marks a different risk area</p>
+</div>
+
+<!-- SCREENSHOT 3: Telegram Bot -->
+<div class="section">
+<h2>Screenshot 3 — Telegram Bot</h2>
+<div class="mock-telegram">
+  <div class="tg-header">
+    <div class="tg-avatar">🛡️</div>
+    <div>
+      <div class="tg-name">PhishGuard AI</div>
+      <div class="tg-status">online</div>
+    </div>
+  </div>
+  <div class="tg-messages">
+    <div class="tg-msg tg-user">From: security@scam-alert.xyz<br>Subject: URGENT: Your account suspended<br><br>Your account has been suspended. Verify now: http://scam.xyz/paypal</div>
+    <div class="tg-msg tg-bot">
+      🛡️ <b>PhishGuard Scan Result</b><br><br>
+      <b>Risk Score:</b> 25/100 🔴 DANGER<br>
+      <b>Type:</b> 📧 General<br><br>
+      <b>From:</b> security@scam-alert.xyz<br>
+      <b>Domain:</b> scam-alert.xyz<br><br>
+      <b>Findings:</b><br>
+      🔴 <b>Pretends to be PayPal</b><br>
+      Says "PayPal" but from scam-alert.xyz<br><br>
+      🔴 <b>Pressure to act fast</b><br>
+      Uses "URGENT" to make you rush<br><br>
+      🟠 <b>Insecure link</b><br>
+      Has http:// link — data can be stolen<br><br>
+      🚨 <i>This email looks dangerous! Do not click any links.</i>
+    </div>
+  </div>
+  <div class="tg-input"><span>Message</span>📎🎤</div>
+</div>
+</div>
+
+<!-- SCREENSHOT 4: Gmail Add-on Mobile -->
+<div class="section">
+<h2>Screenshot 4 — Gmail Add-on (Android/iOS)</h2>
+<div class="mock-gmail">
+  <div class="gmail-email">
+    <div class="ge-from">HDFC Bank</div>
+    <div class="ge-subject">Your monthly account statement</div>
+    <div class="ge-body">Dear Customer, Your account statement for July 2026 is ready. Please find the details below. Do not reply to this email.</div>
+    <div class="gmail-addon">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="ga-title">🛡️ PhishGuard AI</div>
+        <div class="ga-score">100</div>
+      </div>
+      <div class="ga-finding safe">✅ <b>Bank Statement</b> — Recognized bank statement from verified sender</div>
+    </div>
+  </div>
+</div>
+</div>
+
+</body>
+</html>
