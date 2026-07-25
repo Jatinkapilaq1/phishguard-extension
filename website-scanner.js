@@ -10,6 +10,90 @@
   if (document.getElementById('phishguard-panel') || document.getElementById('phishguard-badge')) return;
   if (window.location.protocol === 'chrome-extension:') return;
 
+  /* ═══════════════ SKIP AI CHATBOT SITES ═══════════════ */
+  /* AI sites are handled by ai-chatbot-scanner.js — don't show duplicate badge */
+  var AI_DOMAINS = [
+    'chatgpt.com','chat.openai.com','openai.com','gemini.google.com','bard.google.com','aistudio.google.com',
+    'claude.ai','anthropic.com','console.anthropic.com',
+    'copilot.microsoft.com','copilot.cloud.microsoft','bing.com',
+    'perplexity.ai','grok.com','deepseek.com','chat.deepseek.com',
+    'ai.meta.com','meta.ai','qwen.ai','chat.qwen.ai',
+    'opencode.ai','opencode.sh','cursor.com','cursor.sh','devin.ai','cognition.ai',
+    'v0.dev','bolt.new','stackblitz.com','replit.com','replit.ai','lovable.dev',
+    'windsurf.com','codeium.com','sourcegraph.com','phind.com','github.com/features/copilot',
+    'tabnine.com','aws.amazon.com/q','jetbrains.com/ai',
+    'manus.im','manus.kim','crewai.com','agpt.co','autogpt.net','metagpt.io',
+    'autogen.io','langchain.com','smith.langchain.com','flowtest.ai','dify.ai','cloud.dify.ai',
+    'n8n.io','lindy.ai','superagent.sh',
+    'midjourney.com','openai.com/dall-e','stability.ai','stablediffusionweb.com','clipdrop.co',
+    'ideogram.ai','leonardo.ai','runwayml.com','pika.art','suno.com','udio.com',
+    'elevenlabs.io','canva.com','remove.bg',
+    'synthesia.io','heygen.com','descript.com','speechify.com',
+    'you.com','youchat.com','kagi.com',
+    'jasper.ai','copy.ai','writesonic.com','grammarly.com','notion.so','mem.ai',
+    'character.ai','janitorai.com','chatpdf.com','poe.com',
+    'huggingface.co','hf.co','cohere.com','chat.mistral.ai','mistral.ai',
+    'pi.ai','heypi.com','groq.com','together.ai','fireworks.ai','openrouter.ai',
+    'novita.ai','chutes.ai','venice.ai',
+    'agentforce.com','zendesk.com','intercom.com','freshdesk.com','ada.cx','tidio.com','drift.com',
+    'figma.com','framer.com','webflow.com',
+    'julius.ai','chatbase.co','botpress.com','botpress.cloud',
+    'vapi.ai','bland.ai','retellai.com','cartesia.ai',
+    'deepl.com','deepl.pro',
+    'ibm.com/watsonx',
+    'khanacademy.org/khan-labs','duolingo.com',
+    'askcleo.com',
+    'vercel.com/ai','llamaindex.ai','semantickernel.ai','haystack.deepset.ai','flowiseai.com',
+    'mem0.ai','getzep.com',
+    'zapier.com','make.com','bardeen.ai','taskade.com','otter.ai','fireflies.ai','tldv.io','grain.com',
+    'elicit.com','consensus.app','scite.ai','typeset.io','scholarcy.com',
+    'replicate.com','e2b.dev','modal.com','anyscale.com','deepinfra.com','friendli.ai',
+    'baseten.co','banana.dev','fal.ai','lamini.ai',
+    'blackforestlabs.ai','minimaxi.com','zhipuai.cn','moonshot.cn','baichuan-ai.com',
+    'inflection.ai','x.ai','alibabacloud.com','yiyan.baidu.com','tencent.com',
+    'nvidia.com/ai','build.nvidia.com','c3.ai','palantir.com','datarobot.com','h2o.ai',
+    'databricks.com','snowflake.com','mongodb.com','pinecone.io','weaviate.io','chromadb.com','qdrant.tech','zilliz.com',
+    'wandb.ai','neptune.ai','comet.ml',
+    'wandb.ai/site','comet.com',
+    'paperpal.com','writefull.com','trinka.ai','inkforall.com',
+    'rytr.me','simplified.com','neuronwriter.com','frase.io','marketmuse.com','scalenut.com','surferseo.com',
+    'clearscope.io','wordtune.com','quillbot.com','textcortex.com','hyperwriteai.com',
+    'shortlyai.com','longshot.ai','contentbot.ai','writer.com',
+    'assemblyai.com','play.ht','murf.ai','wellsaidlabs.com','lovo.ai',
+    'photoroom.com','cutout.pro','cleanup.pictures','bigjpg.com','topazlabs.com','magnific.ai',
+    'kapwing.com','opus.pro','opusclip.com','getmunch.com',
+    'reface.ai','facecheck.id','personapixel.com','headshotpro.com','aragon.ai',
+    'stunning.so','dora.run','riffusion.com','musicfy.lol','soundraw.io','mubert.com','lalal.ai',
+    'tactiq.io','read.ai','notta.ai','turboscribe.ai',
+    'rev.ai','sonix.ai','happyscribe.com','krisp.ai','cleanvoice.ai',
+    'transkribus.eu','mathpix.com',
+    'wolframalpha.com','photomath.com','symbolab.com','mathway.com',
+    'coursera.org','udemy.com','edx.org',
+    'talkpal.ai','elsaspeak.com','memrise.com','busuu.com','speak.com',
+    'semanticscholar.org','connectedpapers.com',
+    'sonora.com','notion.site',
+    'lechat.mistral.ai',
+    'lumalabs.ai','sora.com',
+    'salesforce.com','sap.com','oracle.com','servicenow.com','workday.com',
+    'qualtrics.com','surveymonkey.com','typeform.com','jotform.com',
+    'zoho.com','freshworks.com',
+    'clickup.com','asana.com','monday.com','trello.com','atlassian.com','linear.app',
+    'hubspot.com','gong.io','clari.com','outreach.io','salesloft.com',
+    'apollo.io','seamless.ai','leadiq.com','zoominfo.com','clearbit.com','6sense.com','demandbase.com',
+    'kustomer.com','helpscout.com','crisp.chat','livechat.com','tawk.to',
+    'sitegpt.ai','docsbot.ai',
+    'ghostwrite.ai','regie.ai',
+    'cleanvoice.ai','play.ht',
+    'speechify.com',
+    'opencode.ai','opencode.sh'
+  ];
+  var hostname = window.location.hostname.toLowerCase();
+  for (var aiDi = 0; aiDi < AI_DOMAINS.length; aiDi++) {
+    if (hostname === AI_DOMAINS[aiDi] || hostname.endsWith('.' + AI_DOMAINS[aiDi])) {
+      return; /* AI site — ai-chatbot-scanner.js handles this */
+    }
+  }
+
   /* ═══════════════ PHISHING DATABASE ═══════════════ */
   var KNOWN_PHISHING = [
     'paypal-security','paypal-verify','apple-id-verify','microsoft-login','google-security',
