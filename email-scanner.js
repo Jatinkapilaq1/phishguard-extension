@@ -734,13 +734,75 @@
     if (document.getElementById('phishguard-main-btn')) return;
     if (!document.body) return;
 
+    var minimized = false;
+
     var btn = document.createElement('button');
     btn.id = 'phishguard-main-btn';
-    btn.textContent = '\u{1F6E1}\uFE0F Scan';
-    btn.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:2147483647;background:linear-gradient(135deg,#1a1a2e,#16213e);color:#4caf50;border:2px solid #4caf50;padding:10px 16px;border-radius:25px;cursor:pointer;font-weight:bold;font-size:13px;box-shadow:0 4px 20px rgba(76,175,80,0.3);font-family:Arial,sans-serif;user-select:none;transition:transform .2s;';
+    btn.innerHTML = '<span id="pg-btn-full">\u{1F6E1}\uFE0F Scan ' + getGmailTabName() + '</span><span id="pg-btn-mini" style="display:none">\u{1F6E1}\uFE0F</span><span id="pg-btn-minimize" style="margin-left:8px;font-size:10px;opacity:.7;cursor:pointer" title="Minimize">—</span>';
+    btn.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:2147483647;background:linear-gradient(135deg,#1a1a2e,#16213e);color:#4caf50;border:2px solid #4caf50;padding:10px 16px;border-radius:25px;cursor:grab;font-weight:bold;font-size:13px;box-shadow:0 4px 20px rgba(76,175,80,0.3);font-family:Arial,sans-serif;user-select:none;transition:transform .2s;';
     btn.onmouseenter = function() { if (!btn._dragging) btn.style.transform = 'scale(1.05)'; };
     btn.onmouseleave = function() { btn.style.transform = 'scale(1)'; };
-    btn.onclick = function() { togglePanel(); };
+
+    /* ─── MINIMIZE / EXPAND ─── */
+    btn.querySelector('#pg-btn-minimize').onclick = function(e) {
+      e.stopPropagation();
+      minimized = !minimized;
+      var full = btn.querySelector('#pg-btn-full');
+      var mini = btn.querySelector('#pg-btn-mini');
+      var minBtn = btn.querySelector('#pg-btn-minimize');
+      if (minimized) {
+        full.style.display = 'none';
+        mini.style.display = '';
+        minBtn.textContent = '+';
+        btn.style.padding = '10px 12px';
+        btn.style.borderRadius = '50%';
+      } else {
+        full.style.display = '';
+        mini.style.display = 'none';
+        minBtn.textContent = '—';
+        btn.style.padding = '10px 16px';
+        btn.style.borderRadius = '25px';
+      }
+    };
+
+    /* ─── CLICK TO TOGGLE PANEL ─── */
+    btn.onclick = function(e) {
+      if (e.target.id === 'pg-btn-minimize') return;
+      togglePanel();
+    };
+
+    /* ─── DRAG ─── */
+    var isDragging = false;
+    var dragStartX, dragStartY, startLeft, startTop;
+    btn.onmousedown = function(e) {
+      if (e.target.id === 'pg-btn-minimize') return;
+      isDragging = true;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      var rect = btn.getBoundingClientRect();
+      startLeft = rect.left;
+      startTop = rect.top;
+      btn.style.transition = 'none';
+      btn.style.cursor = 'grabbing';
+      e.preventDefault();
+    };
+    document.onmousemove = function(e) {
+      if (!isDragging) return;
+      var dx = e.clientX - dragStartX;
+      var dy = e.clientY - dragStartY;
+      btn.style.left = (startLeft + dx) + 'px';
+      btn.style.top = (startTop + dy) + 'px';
+      btn.style.right = 'auto';
+      btn.style.bottom = 'auto';
+    };
+    document.onmouseup = function() {
+      if (isDragging) {
+        isDragging = false;
+        btn.style.cursor = 'grab';
+        btn.style.transition = 'transform .2s';
+      }
+    };
+
     document.body.appendChild(btn);
   }
 

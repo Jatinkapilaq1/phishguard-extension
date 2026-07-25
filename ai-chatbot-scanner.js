@@ -464,7 +464,7 @@
     };
   }
 
-  /* ═══════════════ BADGE ═══════════════ */
+  /* ═══════════════ BADGE (DRAGGABLE + MINIMIZABLE) ═══════════════ */
   function showAIBadge(result) {
     var existing = document.getElementById('phishguard-ai-badge');
     if (existing) existing.remove();
@@ -476,21 +476,44 @@
     var color = colorMap[result.risk];
     var aiLabel = result.isAI ? result.aiName : 'Unknown AI';
     var icon = result.isAI && result.isLegit ? '🤖' : '🛡️';
+    var minimized = false;
 
     var badge = document.createElement('div');
     badge.id = 'phishguard-ai-badge';
-    badge.style.cssText = 'position:fixed;bottom:16px;left:16px;z-index:2147483647;font-family:-apple-system,BlinkMacSystemFont,sans-serif;cursor:pointer;transition:all .3s;user-select:none;';
+    badge.style.cssText = 'position:fixed;bottom:16px;left:16px;z-index:2147483647;font-family:-apple-system,BlinkMacSystemFont,sans-serif;cursor:grab;transition:opacity .3s,box-shadow .2s;user-select:none;';
     badge.innerHTML =
-      '<div style="background:' + color + ';color:#fff;padding:8px 14px;border-radius:24px;box-shadow:0 4px 20px rgba(0,0,0,.4);display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;backdrop-filter:blur(10px)">' +
+      '<div id="pg-ai-badge-inner" style="background:' + color + ';color:#fff;padding:8px 14px;border-radius:24px;box-shadow:0 4px 20px rgba(0,0,0,.4);display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;backdrop-filter:blur(10px)">' +
         '<span style="font-size:14px">' + icon + '</span>' +
-        '<span>PhishGuard: ' + aiLabel + ' ' + labelMap[result.risk] + ' (' + result.score + '/100)</span>' +
-        '<span style="font-size:10px;opacity:.7">▲</span>' +
+        '<span id="pg-ai-badge-text">PhishGuard: ' + aiLabel + ' ' + labelMap[result.risk] + ' (' + result.score + '/100)</span>' +
+        '<span id="pg-ai-badge-toggle" style="font-size:10px;opacity:.7;cursor:pointer;padding:2px 4px;border-radius:4px;margin-left:4px" title="Minimize/Expand">▲</span>' +
       '</div>';
 
     var panel = null;
     var panelOpen = false;
 
-    badge.onclick = function(e) {
+    /* ─── MINIMIZE / EXPAND ─── */
+    var toggle = badge.querySelector('#pg-ai-badge-toggle');
+    var badgeText = badge.querySelector('#pg-ai-badge-text');
+
+    toggle.onclick = function(e) {
+      e.stopPropagation();
+      minimized = !minimized;
+      if (minimized) {
+        badgeText.style.display = 'none';
+        toggle.textContent = '▼';
+        badge.querySelector('#pg-ai-badge-inner').style.padding = '8px 10px';
+        badge.querySelector('#pg-ai-badge-inner').style.borderRadius = '50%';
+      } else {
+        badgeText.style.display = '';
+        toggle.textContent = '▲';
+        badge.querySelector('#pg-ai-badge-inner').style.padding = '8px 14px';
+        badge.querySelector('#pg-ai-badge-inner').style.borderRadius = '24px';
+      }
+    };
+
+    /* ─── CLICK TO OPEN PANEL ─── */
+    badge.querySelector('#pg-ai-badge-inner').onclick = function(e) {
+      if (e.target.id === 'pg-ai-badge-toggle') return;
       e.stopPropagation();
       if (panelOpen && panel) {
         panel.remove();
@@ -502,6 +525,39 @@
       panelOpen = true;
     };
 
+    /* ─── DRAG ─── */
+    var isDragging = false;
+    var dragStartX, dragStartY, startLeft, startTop;
+    badge.onmousedown = function(e) {
+      if (e.target.id === 'pg-ai-badge-toggle' || (e.target.closest('#pg-ai-badge-inner') && e.target.id !== 'pg-ai-badge-text')) return;
+      isDragging = true;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      var rect = badge.getBoundingClientRect();
+      startLeft = rect.left;
+      startTop = rect.top;
+      badge.style.transition = 'none';
+      badge.style.cursor = 'grabbing';
+      e.preventDefault();
+    };
+    document.onmousemove = function(e) {
+      if (!isDragging) return;
+      var dx = e.clientX - dragStartX;
+      var dy = e.clientY - dragStartY;
+      badge.style.left = (startLeft + dx) + 'px';
+      badge.style.top = (startTop + dy) + 'px';
+      badge.style.right = 'auto';
+      badge.style.bottom = 'auto';
+    };
+    document.onmouseup = function() {
+      if (isDragging) {
+        isDragging = false;
+        badge.style.cursor = 'grab';
+        badge.style.transition = 'opacity .3s';
+      }
+    };
+
+    /* ─── FADE IN / OUT ─── */
     badge.style.opacity = '0';
     badge.style.transform = 'translateY(20px)';
     setTimeout(function() {
