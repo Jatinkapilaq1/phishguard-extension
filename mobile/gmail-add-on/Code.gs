@@ -335,7 +335,7 @@ function onHomepage(e) {
       .setTitle('PhishGuard AI v4.0')
       .setSubtitle('Email Security Scanner')
       .setImageStyle(CardService.ImageStyle.CIRCLE)
-      .setImageUrl('https://raw.githubusercontent.com/nicehash/PhishGuard/main/icons/icon128.png'))
+      .setImageUrl('https://raw.githubusercontent.com/Jatinkapilaq1/phishguard-extension/main/icons/icon128.png'))
     .addSection(CardService.newCardSection()
       .addWidget(CardService.newTextParagraph()
         .setText('Open any email to scan it for phishing threats.'))
@@ -404,7 +404,7 @@ function buildResultCard(result) {
       .setTitle(result.icon + ' ' + (result.display || result.sender || 'Unknown'))
       .setSubtitle(result.subject || '(no subject)')
       .setImageStyle(CardService.ImageStyle.CIRCLE)
-      .setImageUrl('https://raw.githubusercontent.com/nicehash/PhishGuard/main/icons/icon128.png'));
+      .setImageUrl('https://raw.githubusercontent.com/Jatinkapilaq1/phishguard-extension/main/icons/icon128.png'));
 
   /* Risk score section */
   var scoreSection = CardService.newCardSection()
@@ -413,7 +413,7 @@ function buildResultCard(result) {
       .setTopLabel('Risk Score')
       .setText(result.score + '/100 — ' + riskLabels[result.risk])
       .setStartIcon(CardService.newIconImage()
-        .setIconUrl('https://raw.githubusercontent.com/nicehash/PhishGuard/main/icons/icon128.png')
+        .setIconUrl('https://raw.githubusercontent.com/Jatinkapilaq1/phishguard-extension/main/icons/icon128.png')
         .setAltText('PhishGuard')));
 
   builder.addSection(scoreSection);

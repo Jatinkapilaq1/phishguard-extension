@@ -3,9 +3,13 @@
   "dependencies": {},
   "exceptionLogging": "STACKDRIVER",
   "runtimeVersion": "V8",
+  "oauthScopes": [
+    "https://www.googleapis.com/auth/gmail.readonly",
+    "https://www.googleapis.com/auth/gmail.metadata"
+  ],
   "gmail": {
     "name": "PhishGuard AI",
-    "logoUrl": "https://raw.githubusercontent.com/nicehash/PhishGuard/main/icons/icon128.png",
+    "logoUrl": "https://raw.githubusercontent.com/Jatinkapilaq1/phishguard-extension/main/icons/icon128.png",
     "contextualTriggers": [
       {
         "unconditional": {},
