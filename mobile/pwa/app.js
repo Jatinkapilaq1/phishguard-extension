@@ -5,8 +5,8 @@
  */
 
 /* ═══════════════ CONFIG ═══════════════ */
-var CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
-var API_KEY = 'YOUR_GOOGLE_API_KEY';
+var CLIENT_ID = '1029639878493-arhv3v93ut7bqo130q29i4t42mue2nci.apps.googleusercontent.com';
+var API_KEY = 'AIzaSyCYyDXt7nhtkrnNLrXULduqKeN8Pxa11y0';
 var SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
 var DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest'];
 
