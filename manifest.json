@@ -30,7 +30,7 @@
     {
       "matches": ["<all_urls>", "file:///*"],
       "exclude_matches": ["https://mail.google.com/*", "https://outlook.live.com/*", "https://outlook.office.com/*"],
-      "js": ["layers/sender-identity.js", "layers/domain-intelligence.js", "layers/url-intelligence.js", "layers/content-analysis.js", "layers/attachment-analysis.js", "layers/visual-similarity.js", "layers/behavior-analysis.js", "layers/threat-intelligence.js", "modules/weighted-scoring.js", "modules/explainable-ai.js", "modules/ai-memory.js", "core-engine.js", "content.js"],
+      "js": ["website-scanner.js", "layers/sender-identity.js", "layers/domain-intelligence.js", "layers/url-intelligence.js", "layers/content-analysis.js", "layers/attachment-analysis.js", "layers/visual-similarity.js", "layers/behavior-analysis.js", "layers/threat-intelligence.js", "modules/weighted-scoring.js", "modules/explainable-ai.js", "modules/ai-memory.js", "core-engine.js", "content.js"],
       "run_at": "document_end"
     }
   ],
