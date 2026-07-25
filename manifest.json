@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "PhishGuard AI v4 - Smart Email Scanner",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "Smart email scanner with simple explanations and click-to-highlight",
   "permissions": [
     "activeTab",

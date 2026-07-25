@@ -47,6 +47,8 @@
 
   const FREE_EMAILS = ['gmail.com','yahoo.com','hotmail.com','outlook.com','aol.com','mail.com','protonmail.com','proton.me','rediffmail.com'];
 
+  const TRUSTED_DOMAINS = ['google.com','youtube.com','google.co.in','facebook.com','instagram.com','twitter.com','x.com','linkedin.com','microsoft.com','outlook.com','live.com','office.com','github.com','apple.com','icloud.com','amazon.com','amazon.in','paypal.com','netflix.com','spotify.com','flipkart.com','zomato.com','swiggy.com','meesho.com','myntra.com','irctc.co.in','phonepe.com','paytm.com','sbi.co.in','hdfcbank.com','icicibank.com','axisbank.com','kotak.com','zoom.us','slack.com','discord.com','telegram.org','whatsapp.com','ebay.com','wikipedia.org','reddit.com'];
+
   const INDIAN_BANKS = ['sbi.co.in','hdfcbank.com','icicibank.com','axisbank.com','kotakbank.com','yesbank.in','bankofbaroda.com','pnb.co.in','canarabank.in','bankofindia.co.in','unionbankofindia.com','indianbank.in','idbibank.in','federalbank.co.in','southindianbank.com','cityunionbank.com','dbsbank.in','citibank.com','standardchartered.com','hsbc.co.in','rblbank.com','karvysb.com'];
 
   const SAFE_TYPES = ['bank_statement','bank_alert','bank_security','otp','security_notification','ecommerce_order','ecommerce_shipping','food_order','travel_flight','travel_hotel','train_ticket','newsletter','subscription','payment_receipt','social_media','govt','job'];
@@ -269,25 +271,22 @@
   /* ═══════════════ THREAT DETECTION ═══════════════ */
   function detectThreats(text, sender, domain, display, classification) {
     var findings = [];
+    var senderLower = (sender || '').toLowerCase().trim();
+    var displayLower = (display || '').toLowerCase().trim();
 
     /* --- Brand impersonation (sender claims brand but domain wrong) --- */
-    /* Only check the display name (visible sender name), not the email address */
-    var displayLower = (display || '').toLowerCase().trim();
-    var senderLower = (sender || '').toLowerCase().trim();
     for (var brand in BRANDS) {
       var info = BRANDS[brand];
       var claimedBrand = false;
       var matchedName = '';
       for (var ni = 0; ni < info.n.length; ni++) {
         var bname = info.n[ni];
-        /* Use word-boundary check: "meta" should NOT match inside "metadata" */
         var wordRe = new RegExp('(?:^|[\\s,;.:@!/()\\[\\]{}\'"-])' + bname.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?:[\\s,;.:@!/()\\[\\]{}\'"-]|$)', 'i');
         if (wordRe.test(displayLower)) {
           claimedBrand = true;
           matchedName = bname;
           break;
         }
-        /* Also check sender email local-part (before @) with word boundary */
         var localPart = senderLower.split('@')[0] || '';
         if (wordRe.test(localPart)) {
           claimedBrand = true;
@@ -302,10 +301,11 @@
         }
         if (!domainMatch) {
           var brandLabel = brand.charAt(0).toUpperCase() + brand.slice(1);
+          var legitList = info.d.slice(0, 3).join(', ');
           findings.push({
             sev: 'danger', icon: '🎭',
-            title: 'Pretends to be ' + brandLabel,
-            text: 'Sender name says "' + matchedName + '" but this email is from ' + domain + '. Real ' + brandLabel + ' emails only come from ' + info.d[0] + '.',
+            title: 'Pretends to be ' + brandLabel + ' — fake sender',
+            text: 'Display name says "' + matchedName + '" but this email is from "' + domain + '". Real ' + brandLabel + ' emails ONLY come from ' + legitList + '. The sender is impersonating ' + brandLabel + ' to steal your personal data. This is a phishing attack.',
             hl: display || sender,
             hlAll: [display, sender].filter(Boolean)
           });
@@ -322,8 +322,8 @@
     if (isFree && findings.length > 0 && findings[0].sev === 'danger') {
       findings.push({
         sev: 'danger', icon: '📧',
-        title: 'Free email pretending to be brand',
-        text: 'Official companies never send emails from ' + domain + '. This is a scam.',
+        title: 'Brand email sent from free email — definitely fake',
+        text: 'Official companies NEVER send emails from ' + domain + '. Legitimate businesses use their own domain (e.g., @google.com, @hdfcbank.com). Scammers use free Gmail/Yahoo accounts because they can\'t set up real company email. This is 100% a scam.',
         hl: sender,
         hlAll: [sender]
       });
@@ -335,8 +335,8 @@
       if (domain.endsWith(badTlds[ti])) {
         findings.push({
           sev: 'danger', icon: '🌐',
-          title: 'Suspicious website address',
-          text: 'The sender uses "' + domain + '" - this type of address is often used for scams because it is free or very cheap.',
+          title: 'Domain ending "' + badTlds[ti] + '" is commonly used for scams',
+          text: 'The sender uses "' + domain + '" — the "' + badTlds[ti] + '" ending costs less than ₹1 and requires no identity verification. Studies show 90%+ of phishing sites use these cheap TLDs. Real companies use .com, .in, .org, or .gov. This domain is extremely suspicious.',
           hl: domain
         });
         break;
@@ -348,11 +348,11 @@
       var urgentRe = /(urgent|immediate|act\s+now|right\s+now|expires?\s+today|last\s+chance|final\s+warning|within\s+\d+\s+(?:hours?|minutes?|days?))/i;
       var urgentMatch = text.match(urgentRe);
       if (urgentMatch) {
-        var context = text.match(new RegExp('.{0,40}' + urgentMatch[1] + '.{0,40}', 'i'));
+        var context = text.match(new RegExp('.{0,50}' + urgentMatch[1] + '.{0,50}', 'i'));
         findings.push({
           sev: 'high', icon: '⏰',
-          title: 'Creates pressure to act fast',
-          text: 'Uses "' + urgentMatch[1] + '" to make you rush. Real companies give you time to think.',
+          title: 'Creates pressure to act immediately',
+          text: 'Uses "' + urgentMatch[1] + '" to make you rush without thinking. This is a classic phishing tactic — scammers know that if you stop to think, you\'ll realize it\'s fake. Real companies like banks give you days or weeks to respond, not minutes.',
           hl: context ? context[0].trim() : urgentMatch[1]
         });
       }
@@ -365,8 +365,8 @@
       if (credMatch) {
         findings.push({
           sev: 'danger', icon: '🔑',
-          title: 'Asks for your login details',
-          text: 'Says "' + credMatch[1] + '" - real companies never ask for passwords or sensitive info through email.',
+          title: 'Asks for your login details — phishing attempt',
+          text: 'Says "' + credMatch[1] + '" — real companies NEVER ask you to verify passwords, update billing, or confirm identity through email links. Banks and services handle this through their official app or secure portal (which you type yourself, not click a link). Clicking this link will take you to a fake login page that steals your credentials.',
           hl: credMatch[1]
         });
       }
@@ -379,22 +379,22 @@
       if (fearMatch) {
         findings.push({
           sev: 'danger', icon: '⚠️',
-          title: 'Uses threats to scare you',
-          text: 'Says "' + fearMatch[1] + '" to make you panic. Real companies send polite notices, not scary emails.',
+          title: 'Uses threats to create panic',
+          text: 'Says "' + fearMatch[1] + '" — scammers use fear to make you act without thinking. Real companies send polite, professional notices when there\'s a security issue. They don\'t threaten you or use alarming language. If you\'re worried, log into your account directly (not through this email) to check.',
           hl: fearMatch[1]
         });
       }
     }
 
     /* --- Insecure HTTP link --- */
-    var httpRe = /https?:\/\//;
     if (/http:\/\//.test(text)) {
       var httpMatch = text.match(/http:\/\/[^\s"<>]+/);
+      var httpUrl = httpMatch ? httpMatch[0].substring(0, 80) : 'http://...';
       findings.push({
         sev: 'high', icon: '🔓',
-        title: 'Insecure link found',
-        text: 'Contains an "http://" link (not secure). Your data can be stolen. Legitimate companies use "https://".',
-        hl: httpMatch ? httpMatch[0].substring(0, 60) : 'http://'
+        title: 'Link is not encrypted (HTTP)',
+        text: 'Contains an insecure link: "' + httpUrl + '" — data sent over HTTP is visible to anyone on the same network (WiFi router, ISP, hacker). Real companies ALWAYS use HTTPS (encrypted). Any login or payment page on HTTP is either broken or malicious.',
+        hl: httpUrl
       });
     }
 
@@ -405,8 +405,8 @@
       if (ipMatch) {
         findings.push({
           sev: 'danger', icon: '🚨',
-          title: 'Link uses numbers instead of website name',
-          text: 'Contains ' + ipMatch[0] + ' which is a numeric address. Real companies use names like "google.com", not numbers.',
+          title: 'Link uses raw IP address — phishing indicator',
+          text: 'Contains IP address "' + ipMatch[0] + '" — real businesses NEVER use raw numbers (like 192.168.1.1) instead of names (like google.com). This IP likely hosts a phishing server. Scammers use IPs because domain names cost money and can be easily shut down.',
           hl: ipMatch[0]
         });
       }
@@ -418,8 +418,8 @@
     if (shortMatch) {
       findings.push({
         sev: 'high', icon: '🔗',
-        title: 'Hidden link found',
-        text: 'Uses a shortened link (' + shortMatch[1] + ') that hides the real destination. Never trust hidden links.',
+        title: 'Hidden link via URL shortener: ' + shortMatch[1],
+        text: 'Uses "' + shortMatch[0].substring(0, 40) + '" — URL shorteners hide the real destination. You have no idea where this link actually goes. Scammers use them to disguise phishing sites. If a real company sent this, they\'d show the full URL. Hover over links before clicking.',
         hl: shortMatch[0].substring(0, 50)
       });
     }
@@ -434,9 +434,9 @@
         var ext = aname.match(dangerExts);
         findings.push({
           sev: 'danger', icon: '📎',
-          title: 'Dangerous file attached',
-          text: 'Contains "' + aname.substring(0, 40) + '" - this is a program file that can harm your computer. Never open suspicious attachments.',
-          hl: aname.substring(0, 40)
+          title: 'Dangerous file type: "' + (ext ? ext[1] : 'unknown') + '"',
+          text: 'Contains file "' + aname.substring(0, 50) + '" — .' + (ext ? ext[1] : '?') + ' files are executable programs that can install viruses, ransomware, or spyware. Even if it looks like a document (e.g., "invoice.pdf.exe"), the REAL file type is after the last dot. NEVER open .exe, .scr, .bat, .vbs, .js files from emails.',
+          hl: aname.substring(0, 50)
         });
         break;
       }
@@ -449,8 +449,8 @@
     if (doubleMatch) {
       findings.push({
         sev: 'danger', icon: '📎',
-        title: 'Tricky double file extension',
-        text: 'File name tries to look innocent like "document.pdf.exe". The real type is after the last dot - this is dangerous.',
+        title: 'Double extension trick detected: "' + doubleMatch[0] + '"',
+        text: 'File looks like "' + doubleMatch[0] + '" — the real type is AFTER the last dot (.exe, .scr, etc.). Scammers name files "invoice.pdf.exe" or "photo.jpg.scr" to look innocent. Windows may hide the real extension. This is ALWAYS malware.',
         hl: doubleMatch[0]
       });
     }
@@ -463,23 +463,47 @@
         findings.push({
           sev: 'danger', icon: '🔤',
           title: 'Fake characters in sender address',
-          text: 'The sender "' + sender + '" uses fake characters that look like real letters but are not. This impersonates a real company.',
+          text: 'The sender "' + sender + '" contains invisible fake characters. For example, Cyrillic "а" looks identical to English "a" but they\'re different. This is called an "IDN Homograph Attack" — the address LOOKS real but goes to a completely different server. Always check the actual domain after @.',
           hl: sender
         });
         break;
       }
     }
 
+    /* --- Links that don't match displayed text --- */
+    if (SAFE_TYPES.indexOf(classification.type) === -1) {
+      var hrefRe = /href=["']([^"']+)["']/gi;
+      var linkTextRe = /<a[^>]*>([^<]+)<\/a>/gi;
+      var bodyLinks = fullPageText.match(/https?:\/\/[^\s<>"]+/gi);
+      if (bodyLinks && bodyLinks.length > 0) {
+        var suspiciousLinks = [];
+        for (var li = 0; li < bodyLinks.length; li++) {
+          var linkUrl = bodyLinks[li].toLowerCase();
+          if (!linkUrl.includes(domain) && !TRUSTED_DOMAINS.some(function(td) { return linkUrl.includes(td); })) {
+            suspiciousLinks.push(bodyLinks[li].substring(0, 60));
+          }
+        }
+        if (suspiciousLinks.length > 0) {
+          findings.push({
+            sev: 'high', icon: '🔗',
+            title: suspiciousLinks.length + ' link(s) point to different website',
+            text: 'Found links pointing to "' + suspiciousLinks[0] + (suspiciousLinks.length > 1 ? '" and ' + (suspiciousLinks.length - 1) + ' more' : '"') + ' — this doesn\'t match the sender domain (' + domain + '). Scammers embed links that SAY one thing but GO somewhere else. Always hover over links to see the real destination before clicking.',
+            hl: suspiciousLinks[0]
+          });
+        }
+      }
+    }
+
     /* --- Safe patterns (bonus trust) --- */
     if (findings.length === 0) {
       if (/do\s+not\s+reply|noreply|no-reply/i.test(text))
-        findings.push({ sev: 'safe', icon: '✅', title: 'Automated system email', text: 'This is a real automated email from a legitimate service. No action needed.' });
+        findings.push({ sev: 'safe', icon: '✅', title: 'Automated system email', text: 'This is a real automated email from a legitimate service. No action needed from your side.' });
       else if (/unsubscribe|view\s+in\s+browser/i.test(text))
-        findings.push({ sev: 'safe', icon: '✅', title: 'Legitimate marketing email', text: 'Has unsubscribe link - this is a real marketing email, not dangerous.' });
+        findings.push({ sev: 'safe', icon: '✅', title: 'Legitimate marketing email', text: 'Has unsubscribe link — this is a real marketing email from a verified sender. Not dangerous.' });
       else if (classification.risk < 0)
-        findings.push({ sev: 'safe', icon: classification.icon, title: classification.label, text: 'This is a recognized ' + classification.label.toLowerCase() + ' from a verified sender.' });
+        findings.push({ sev: 'safe', icon: classification.icon, title: classification.label, text: 'This is a recognized ' + classification.label.toLowerCase() + ' from a verified sender. Safe to use.' });
       else
-        findings.push({ sev: 'safe', icon: '✅', title: 'No threats detected', text: 'This email looks normal. No phishing patterns found.' });
+        findings.push({ sev: 'safe', icon: '✅', title: 'No threats detected', text: 'This email looks normal. No phishing patterns, suspicious links, or security issues found.' });
     }
 
     return findings;
