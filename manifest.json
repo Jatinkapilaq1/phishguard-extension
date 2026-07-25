@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "PhishGuard AI v4 - Smart Email Scanner",
+  "name": "PhishGuard AI - Smart Email & AI Chatbot Scanner",
   "version": "5.0.0",
-  "description": "Smart email scanner with simple explanations and click-to-highlight",
+  "description": "Scans emails, websites, and AI chatbots for phishing, data theft, and prompt injection",
   "permissions": [
     "activeTab",
     "storage",
@@ -30,7 +30,7 @@
     {
       "matches": ["<all_urls>", "file:///*"],
       "exclude_matches": ["https://mail.google.com/*", "https://outlook.live.com/*", "https://outlook.office.com/*"],
-      "js": ["website-scanner.js", "layers/sender-identity.js", "layers/domain-intelligence.js", "layers/url-intelligence.js", "layers/content-analysis.js", "layers/attachment-analysis.js", "layers/visual-similarity.js", "layers/behavior-analysis.js", "layers/threat-intelligence.js", "modules/weighted-scoring.js", "modules/explainable-ai.js", "modules/ai-memory.js", "core-engine.js", "content.js"],
+      "js": ["website-scanner.js", "ai-chatbot-scanner.js", "layers/sender-identity.js", "layers/domain-intelligence.js", "layers/url-intelligence.js", "layers/content-analysis.js", "layers/attachment-analysis.js", "layers/visual-similarity.js", "layers/behavior-analysis.js", "layers/threat-intelligence.js", "modules/weighted-scoring.js", "modules/explainable-ai.js", "modules/ai-memory.js", "core-engine.js", "content.js"],
       "run_at": "document_end"
     }
   ],

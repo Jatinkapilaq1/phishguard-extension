@@ -20,14 +20,21 @@
   ];
 
   var TRUSTED_DOMAINS = [
-    'google.com','gmail.com','youtube.com','google.co.in','googleapis.com','gstatic.com','cloud.google.com',
+    'google.com','gmail.com','youtube.com','google.co.in','googleapis.com','gstatic.com','cloud.google.com','gemini.google.com',
     'facebook.com','instagram.com','twitter.com','x.com','linkedin.com',
-    'microsoft.com','outlook.com','live.com','office.com','office365.com','github.com','azure.com',
+    'microsoft.com','outlook.com','live.com','office.com','office365.com','github.com','azure.com','copilot.microsoft.com',
     'apple.com','icloud.com','microsoftonline.com',
     'amazon.com','amazon.in','amazon.co.in','aws.amazon.com',
     'paypal.com','paypal.in',
     'netflix.com','spotify.com',
     'flipkart.com','zomato.com','swiggy.com','meesho.com','myntra.com',
+    /* AI Services */
+    'chatgpt.com','chat.openai.com','openai.com','claude.ai','anthropic.com','perplexity.ai',
+    'copilot.cloud.microsoft','bing.com','deepseek.com','chat.deepseek.com','grok.com',
+    'huggingface.co','hf.co','cohere.com','chat.mistral.ai','mistral.ai',
+    'pi.ai','heypi.com','you.com','youchat.com','poe.com','character.ai',
+    'phind.com','cursor.com','cursor.sh','v0.dev','bolt.new','stackblitz.com','replit.com',
+    'lovable.dev','opencode.ai','opencode.sh',
     'irctc.co.in','makemytrip.com','redbus.in',
     'phonepe.com','paytm.com','cred.club',
     'sbi.co.in','hdfcbank.com','icicibank.com','axisbank.com','kotak.com',
